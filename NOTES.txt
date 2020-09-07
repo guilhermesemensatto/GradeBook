@@ -1,0 +1,180 @@
+CAP 6 - working with references types and value types - Passagem por referencia ou valor.
+
+No C# uma variavel é sempre passada por valor para um metodo.
+No c# ao se passar uma variavel por parametro, nao se deseja que outro metodo altere inesperadamente o valor ou a referencia que esta dentro de sua variavel.
+O valor dessa variavel recebida pelo método, é copiado para um novo local diferente da memoria.
+Para se realizar alterações na variavel passada por parametro, deve-se utilizar a keyword "ref" antes do objeto na passagem de parametro do método.
+Ex:
+
+var book1 = new Book("Book1");
+GetBookSetName(ref book1, "New Name")
+
+private void GetBookSetName(ref Book book, string name)
+{
+	book = new Book(name);
+}
+
+A keyword "out" é semelhante a "ref", com a diferença que o argumento passado não precisa ter sido inicializado.
+Sendo assim sua inicialização deve ser feita dentro do método quando se utilizar a keyword "out".
+
+BASICAMENTE
+No C# existem duas categorias de tipos:
+
+Tipos por VALOR = Definidos por structs. Armazena o valor diretamente. São imutáveis.
+Tipos por REFERENCIA = Definidos por classses. Armazena o endereço que o valor esta armazenado em um endereço da memoria. São mutáveis.
+
+
+Struct vs Class
+
+F12 para olhar os metadados de qualquer tipo.
+Os tipos INT, DOUBLE e DATETIME por ex são structs, portanto são tipos por valor. 
+
+Struct são usadas para criar estruturas de dados onde os objetos sejam pequenos (no máximo 16 bytes). São tipos por valor.
+Estas estruturas têm seu conteúdo (seu valor) integral copiado quando precisa-se transportar de um local para outro. 
+
+
+Class são usados quando os objetos podem possuir várias características e consequentemente, são maiores.
+Também podem ter suas características alteradas individualmente.
+Em objetos mutáveis é normal que apenas a referência seja copiada. Neste caso, são tipos por referência (reference types)
+
+
+STRING
+O tipo string é um caso especial pq é definida de uma maneira, mas se comporta de outra maneira.
+String é declarada como class, portanto é um tipo por referencia.
+No entando, a cadeia de caracteres geralmente se comporta como um tipo por valor. 
+Embora a cadeia de caracteres seja um tipo por referencia, ela geralmente se comporta como um tipo por valor.
+Strings são imutaveis.
+
+
+GARBAGE COLLECTOR
+No tempo de execução do .NET (Common Language Runtime - CLR), o Garbage Collector gerencia a alocação e o lançamento da memória para um aplicativo.
+Rastreia todos os objetos alocados e criados, alem de controlar as variaveis criadas que estão na memoria.
+Quando não existem mais referencias, isto é,  quando nada esta usando esses objetos e variaveis, ele executa o Garbage Collector para limpar e desalocar eles da memoria.
+Através disso mais memoria é liberada e também outro fator é para que a aplicação não esgote toda a memoria disponivel.
+Por ex ao instanciar um objeto, realizar operações sobre ele, e depois disso ele não é mais referenciado, ou seja, não existem mais nenhum escopo para essas variaveis,
+a limpeza é feita através do Garbage Collector e esses dados na memoria são liberados.
+
+https://docs.microsoft.com/pt-br/dotnet/standard/garbage-collection/fundamentals
+
+CAP 7
+Controlling the Flow of Execution
+
+If - verificar condições, ramificar o fluxo de execução
+if >= <= ==
+foreach 
+while
+break continue goto
+switch
+
+Exceptions
+throw -> objeto de exceção
+.net oferece classes internas que representam exceções
+ArgumentException -> um método recebe um valor de parametro que é inválido -> informa que existe um alguma coisa errada com esse valor passado por parametro
+nameof -> retorna a representacao de string do simbolo
+
+try catch -> captura a exceção para quando houver um erro na aplicação, esse erro ser tratado
+
+ajustar o catch para pegar alguma exceção esperada
+
+bloco finnaly -> codigo q se deseja executar independente se houve ou não uma exception -> ex fechar socket, conexão com arquivo, etc
+
+CAP 8 Building Types
+Sobrecarga (Overload)  é a habilidade de poder definir diversas propriedades, métodos ou procedimentos em uma classe com o mesmo nome mas parâmetros diferentes.
+o que realmente importanta pro overload, é o tipo do retorno, e o numero e os tipos de parametros
+
+properties 
+https://docs.microsoft.com/pt-br/dotnet/csharp/programming-guide/classes-and-structs/using-properties
+propertie sem set = somente leitura
+auto-propertie em c# -->> public string Name { get; set; }
+private set -> so pode ser atribuido no construtor do objeto, depois não é mais permitido setar essa propriedade
+
+read-only fields
+podem somente ser atribuidos no construtor das classes ou na sua declaração
+
+const
+nao mudara nunca o valor, sempre sera o valor que foi atribuido na sua declaração 
+
+delegate
+descreve e cria um novo tipo para o .NET
+https://docs.microsoft.com/pt-br/dotnet/api/system.delegate?view=netcore-3.1#code-try-4
+delegate é uma "referencia/indicador a uma função"
+
+multicast deletage
+podem invocar multiplos metodos
+
+delegate dão a capacidade de declarar uma variavel que possa ser usada para invocar um método
+
+DEFININING AN EVENT
+no gradebook, queremos definir um evento ao adicionar uma nova nota
+atraves de delegates
+public delegate void GradeAddedDelegate(object sender, EventArgs args); 
+-> object é o tipo base para tudo no .net, pode-se passar qualquer coisa para esse parametro(string, double, int, etc)
+
+a convenção em .net em eventos é que o primeiro parametro que é passado como parte de um delegate de event, esse primeiro parametro é o envio, quem esta enviando
+esse evento para o "resto do mundo"
+segundo parametro EventArgs -> precisa ver um pouco sobre herança para entender
+EVENT keyword 
+
+
+CAP 9 OBJECT-ORIENTED PROGRAMMING WITH C# -> OOP IN C#
+HERANÇA, POLIMORFISMO E ENCAPSULAMENTO
+
+3 PILARES DA PROGRAMACAO ORIENTADA A OBJETOS
+Encapsulamento -> permite ocultar detalhes sobre o codigo, e acessar os modificadores como o public e o privado que dão controle explicito sobre o encapsulamento 
+e quem ve os membros de uma classe
+
+Porlimorfismo -> objetos do mesmo tipo que se comportam de maneiras diferentes
+
+
+Herança -> capacidade de reutilizar o código em classes semelhantes 
+Primeiro se define uma classe base
+keyword base -> esta referenciando a classe base
+
+no .net toda classe tem uma classe base, especificando ou nao como classe base, toda clase tem uma classe base
+tudo é derivado de OBJECT -> SYSTEM.OBJECT -> class -> tudo no .net por padrao é um tipo por referencia pq tudo é definido por uma classe system.object
+
+abstract keyword Abstração em C # é o processo de ocultar os detalhes internos e mostrar apenas a funcionalidade. 
+O modificador abstrato indica a implementação incompleta.
+https://docs.microsoft.com/pt-br/dotnet/csharp/language-reference/keywords/abstract
+override keyword -> sobreescrever um metodo da classe base esta provendo -> polimorfismo no c#
+polimorfismo -> capacidade de substituir metodos herdados da classe base
+so pode substituir/sobreescrever metodos abstracts e metodos virtuais
+
+INTERFACE
+Define abstratamente os membros que estarão disponiveis para qualquer coisa que implemente essa interface
+Uma interface define um contrato. Qualquer um class ou struct que implemente esse contrato deve fornecer uma implementação dos membros definidos na interface.
+convenção no .net framework é que uma interface comeca com I
+https://docs.microsoft.com/pt-br/dotnet/csharp/language-reference/keywords/interface
+
+criando um arquivo txt para guardar as notas
+File.AppendText($"{Name}.txt")
+
+IDisposable -> interface utilizada por muitas classes no .net que implementarão para anunciar o fato que eles tem algo para limpar, tem algo que precisa ser liberado 
+TextWriter que é retornado de File.AppendText, esta q em ultima analise implementa IDisposable, entao é algo que precisa ser limpo
+
+var writer = File.AppendText($"{Name}.txt");
+writer.Dispose(); -> faz a mesma coisa que o Close(); liberam o recurso subjacente
+
+USING keyword -> padrão do .net que utiliza o Dispose logo apos o termino do trabalho
+
+Encapsulamento - trabalhar com nivel certo deencapsulamento o software fica mais facil de se trabalhar
+
+MODULO 10
+C#8
+? -> na declaracao de uma variavel, diz que ela pode assumir o valor null;/
+
+Modulo 11
+sugestoes de proxs cursos
+c# generics
+async c#
+LINQ
+Effective C#
+
+
+
+
+
+
+
+
+
